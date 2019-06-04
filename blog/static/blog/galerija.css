@@ -1,0 +1,4 @@
+#kont {
+	display:grid;
+	grid-auto-columns: repeat(4, 3fr);
+}

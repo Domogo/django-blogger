@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Django-Blogger: Galery</title>
+
+    {% load static %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'blog/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'blog/galerija.css' %}" rel="stylesheet">
+
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'blog/jquery.min.js' %}"></script>
+    <script src="{% static 'blog/bootstrap.bundle.min.js' %}"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/">Django-Blogger</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link active" href="/profile/{{user.id}}">{{user.username}}'s profile</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+      <!-- Page Heading -->
+      <h1 class="my-4">Your own private galery!<small><a class="nav-link" href="/profile/{{user.id}}/galery/add">Upload Images</a></small></h1>
+      {% if galery %}
+      {% for image in galery %}
+      <div id="kont">
+        <div id="kont" class="col-lg-3 col-md-4 col-sm-6">
+          
+            <a href="{{image.image.url}}"><img class="card-img-top" id="slicica" src="{{image.image.url}}" alt=""></a>
+            <div class="card-body">             
+            
+          </div>
+        </div>
+       
+      </div>
+       {% endfor %}
+       {% else %}
+       <p> You have no images. </p>
+       {% endif %}
+      <!-- /.row -->
+
+
+
+  </body>
+
+</html>

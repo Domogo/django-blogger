@@ -1,0 +1,212 @@
+{% load django_markdown markup_tags comments %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Django-Blogger: Blog Post</title>
+    {% load static %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'blog/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'blog/blog-post.css' %}" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'blog/jquery.min.js' %}"></script>
+    <script src="{% static 'blog/bootstrap.bundle.min.js' %}"></script>
+
+
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="/">Django-Blogger</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+          {% if user.is_authenticated %}
+
+            <li class="nav-item">
+              <a class="nav-link" href="/profile/{{user.id}}">{{user.username}}'s profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+          {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+      <div class="row">
+
+        <!-- Post Content Column -->
+        <div class="col-lg-8">
+          {% if post %}
+          <!-- Title -->
+          <h1 class="mt-4">{{post.title}}</h1>
+          <hr>
+          <!-- Author -->
+          <div>
+          <p class="lead">
+            By
+            <a href="/profile/{{post.parent_blog.author.id}}">{{post.parent_blog.author}}</a>
+            <span id="pub_date">
+              
+              {{post.pub_date}}
+            </span>
+          </p>
+
+
+          <!-- Date/Time -->
+          </div>
+          <hr>
+          <!-- Post Content -->
+            <p>{{ post.info|apply_markup:"markdown" }}</p>
+
+          {% endif %}
+          <hr>
+
+          <!-- Comments Form -->
+          {% get_comment_form for post as form %}
+          <div class="card my-4">
+            <h5 class="card-header">Leave a Comment:</h5>
+            <div class="card-body">
+              <h4 class="mt-0">{{user.username}}</h4>
+              <form  action="{% comment_form_target %}" method="post">
+                <div class="form-group">
+                  {% csrf_token %}
+                  {{ form.comment }}
+                  {{ form.honeypot }}
+                  {{ form.content_type }}
+                  {{ form.object_pk }}
+                  {{ form.timestamp }}
+                  {{ form.security_hash }}
+                  <input type="hidden" name="next" value="{% url 'single_post' post.parent_blog.id post.id %}" />
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
+
+          {% get_comment_list for post as comment_list %}
+          {% for comment in comment_list %}
+          <!-- Single Comment -->
+          <div class="media mb-4">
+            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+            <div class="media-body">
+              <h5 class="mt-0">{{comment.user}} <small>{{comment.submit_date}}</small></h5>
+              {{comment.comment}}
+            </div>
+
+          </div>
+            <hr>
+          {% endfor %}
+        </div>
+
+        <!-- Sidebar Widgets Column -->
+        <div class="col-md-4">
+
+          <!-- Search Widget 
+          <div class="card my-4">
+            <h5 class="card-header">Search</h5>
+            <div class="card-body">
+              <div class="input-group">
+                <form method="GET" action="">
+                <input type="text" name="q" class="" placeholder="Search for..."/>
+                <input type="submit" class="srcbtn btn btn-secondary" value="Go!"/>
+                <form>
+              </div>
+            </div>
+          </div>
+
+          <!- Categories Widget 
+          <div class="card my-4">
+            <h5 class="card-header">Categories</h5>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-lg-6">
+                  <ul class="list-unstyled mb-0">
+                    <li>
+                      <a href="#">Web Design</a>
+                    </li>
+                    <li>
+                      <a href="#">HTML</a>
+                    </li>
+                    <li>
+                      <a href="#">Freebies</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-lg-6">
+                  <ul class="list-unstyled mb-0">
+                    <li>
+                      <a href="#">JavaScript</a>
+                    </li>
+                    <li>
+                      <a href="#">CSS</a>
+                    </li>
+                    <li>
+                      <a href="#">Tutorials</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+  --><!-- side widget-->
+
+          <div class="card my-4">
+            <h5 class="card-header">Parent Blog:</h5>
+            <div class="card-body">
+              <h3><a href="/blog/{{post.parent_blog.id}}/blog_posts ">{{post.parent_blog}} </a></h3>
+            </div>
+          </div>
+
+
+          <div class="card my-4">
+            <h5 class="card-header">Actions:</h5>
+            <div class="card-body">
+              Likes: {{ post.likes }}
+              &nbsp;&nbsp;
+              {% if liked %}
+                <button onclick="location.href = '/blog/{{ post.parent_blog.id }}/blog_posts/{{ post.id }}/post/like'" class="btn btn-primary">Unlike</button>
+              {% else %}
+                <button onclick="location.href = '/blog/{{ post.parent_blog.id }}/blog_posts/{{ post.id }}/post/like'" class="btn btn-primary">Like</button>
+              {% endif %}
+
+              &nbsp;&nbsp;
+            </div>
+          </div>
+        
+        </div>
+
+      </div>
+      <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+
+  
+
+
+
+  </body>
+
+</html>

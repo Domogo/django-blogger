@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Django Blogger: Profile</title>
+    {% load static %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'blog/bootstrap_profile.min.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/profile.css' %}" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'blog/jquery.min.js' %}"></script>
+    <script src="{%static 'blog/bootstrap.bundle.min.js' %}"></script>
+
+    <style>
+      .invisible{
+        display: none;
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/">Django-Blogger</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+          	{% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link active" href="/profile/{{user.id}}">{{user.username}}'s profile</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+      <div class="row">
+      	{% if user %}
+        <div class="col-lg-3">
+          <h1 class="my-4">{{prof_user.username}}</h1>
+          <h3>Following: {{profile.following}}</h3>
+          <h3>Followers: {{profile.followers}}</h3>
+          {% if user != prof_user %}
+            {% if follow%}
+              <button onclick="location.href = '/profile/{{ prof_user.id }}/follow'" class="btn btn-primary">Following</button>
+            {% else %}
+              <button onclick="location.href = '/profile/{{ prof_user.id }}/follow'" class="btn btn-primary">Follow</button>
+            {% endif %}
+            </br></br>
+          {% endif %}
+          <div class="list-group">
+            <a href="#" class="list-group-item active" id="blog_btn" onclick="showBlogs()">{{prof_user.username}}'s blogs</a>
+            <a href="#" class="list-group-item" id="info_btn" onclick="showInfo()">About {{prof_user.username}}</a>
+          </div>
+          <hr>
+          {% if user == prof_user %}   <!-- provjera da samo vlasnik profila moze viditi ovo-->
+          <div class="list-group">
+            <a href="/edit_info" class="list-group-item">Edit info</a>
+            <a href="/profile/new_blog" class="list-group-item">New Blog</a>
+            <a href="/profile/{{user.id}}/galery" id="gal_btn" class="list-group-item">Galery</a>
+
+          </div>
+          {% endif %}
+        </div>
+          {% endif %}
+
+
+
+
+        <!-- Blog view -->
+
+        <div class="col-lg-9" id="blog_view">
+        {% if blogs%}
+        	{% for blog in blogs %}
+          <div class="card mt-4">
+
+            {% if blog.cover %}
+            <img class="card-img-top img-fluid" src="{{blog.cover.url}}" alt="">
+            {% else %}
+            <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt="">
+            {% endif %}
+            <div class="card-body">
+              <h3 class="card-title">{{blog.title}}</h3>
+
+              <p class="card-text">{{blog.info}}</p>
+              <p class="card-text">{{blog.pub_date}}</p>
+              <a class="btn btn-primary" href="/blog/{{ blog.id }}/blog_posts">View Blog</a>
+            </div>
+          </div>
+          {% endfor %}
+          {% endif %}
+        </div>
+
+        <!-- Info view -->
+        <div class="col-lg-9 invisible" id="info_view">
+
+          <div class="card mt-4">
+            <div class="card-body">
+              <h3 class="card-title">{{prof_user.username}}'s info:</h3>
+
+              <p class="card-text">{{prof_user.profile.bio}}</p>
+              <hr>
+              <div class="list-group">
+                <a href="http://{{ user.profile.instagram }}" target="_blank" class="list-group-item">Instagram</a>
+                <a href="http://{{ user.profile.fb }}" target="_blank" class="list-group-item">Facebook</a>
+                <a href="http://{{ user.profile.twitter }}" target="_blank" class="list-group-item">Twitter</a>
+                <a href="http://{{ user.profile.website }}" target="_blank" class="list-group-item">Website</a>
+
+
+            </div>
+          </div>
+
+                  <!-- galery view -->
+        
+        </div>
+
+
+
+        <script>
+            function showBlogs() {
+              var element = document.getElementById("info_view");
+              element.classList.add("invisible");
+
+              var blog = document.getElementById("blog_view");
+              blog.classList.remove("invisible");
+
+              var blg_btn = document.getElementById("blog_btn");
+              blg_btn.classList.add("active");
+
+              var inf_btn = document.getElementById("info_btn");
+              inf_btn.classList.remove("active");
+            }
+
+            function showInfo() {
+              var element = document.getElementById("blog_view");
+              element.classList.add("invisible");
+              var info = document.getElementById('info_view');
+              info.classList.remove('invisible');
+
+
+              var blg_btn = document.getElementById("blog_btn");
+              blg_btn.classList.remove("active");
+
+              var inf_btn = document.getElementById("info_btn");
+              inf_btn.classList.add("active");
+
+            }
+
+        </script>
+        <!-- /.col-lg-9 -->
+
+      </div>
+
+    </div>
+    <!-- /.container -->
+
+  </body>
+
+</html>

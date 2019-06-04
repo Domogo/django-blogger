@@ -1,0 +1,93 @@
+{% load django_markdown markup_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Django-Blogger: Register</title>
+    {% load static %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'blog/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'registration/registration.css' %}" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'blog/jquery.min.js' %}"></script>
+    <script src="{% static 'blog/bootstrap.bundle.min.js' %}"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="/">Django-Blogger</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+          
+
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link active" href="/profile/{{user.id}}">{{user.username}}'s profile</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+      <div class="row">
+
+        <!-- Post Content Column -->
+        <div class="col-lg-8">
+          <div class="card my-4">
+            <h5 class="card-header">Add image to galery:</h5>
+            <div class="card-body">
+              <div>
+                <form method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  {{ form.as_p }}
+                  <button class="btn btn-secondary" type="submit">Add</button>
+                  <input class="btn btn-secondary" type="button" onclick="location.href='/';" value="Quit" />
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Widgets Column -->
+        <div class="col-md-4">
+
+          
+
+      </div>
+      <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+
+
+
+
+
+  </body>
+
+</html>

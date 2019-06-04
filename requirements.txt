@@ -1,0 +1,11 @@
+Django==1.8.9
+django-assets==0.10
+django-sekizai==0.9.0
+django-classy-tags==0.5.1
+psycopg==2.6
+<<<<<<< HEAD
+django-contrib-comments==1.8.0
+=======
+
+>>>>>>> 08869e96fd8b41bf95c5fb34bd02f36c0dc50a48
+django-filer
